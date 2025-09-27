@@ -3,16 +3,16 @@ package org.bank.models;
 import org.bank.enums.Role;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Client extends Personne {
-    private static int nextId = 1;
-    private int idClient;
-    private List<Compte> comptes;
+    private String clientId;
+    private List<Account> accounts;
 
     public Client(String nom, String prenom, String email, String motDePasse) {
         super(nom, prenom, email, motDePasse);
-        this.idClient = nextId++;
-        this.comptes = new ArrayList<>();
+        this.clientId = UUID.randomUUID().toString();
+        this.accounts = new ArrayList<>();
     }
 
     @Override
@@ -20,26 +20,21 @@ public class Client extends Personne {
         return Role.CLIENT;
     }
 
-    public int getIdClient() {
-        return idClient;
+    public String getClientId() {
+        return clientId;
     }
 
-    public List<Compte> getComptes() {
-        return comptes;
+    public List<Account> getAccounts() {
+        return accounts;
     }
 
-    public void ajouterCompte(Compte compte) {
-        if (compte != null && !comptes.contains(compte)) {
-            comptes.add(compte);
+    public void addAccount(Account account) {
+        if (account != null && !accounts.contains(account)) {
+            accounts.add(account);
         }
     }
 
-    public void supprimerCompte(Compte compte) {
-        comptes.remove(compte);
-    }
-
-    @Override
-    public String toString() {
-        return String.format("[%d] %s - %d compte(s)", idClient, super.toString(), comptes.size());
+    public void removeAccount(Account account) {
+        accounts.remove(account);
     }
 }
