@@ -1,0 +1,97 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam packageStyle rectangle
+
+title Moroccan Bank Console App - Core Domain
+
+abstract class Personne {
+  - nom : String
+  - prenom : String
+  - email : String
+  - motDePasse : String
+  {abstract} + getRole() : Role
+}
+
+class Client {
+  - clientId : String
+  - accounts : List<Account>
+  + addAccount(account : Account) : void
+  + removeAccount(account : Account) : void
+}
+
+class Manager {
+  - managerId : String
+  - department : String
+  - clientList : List<Client>
+  + addClient(client : Client) : void
+  + removeClient(client : Client) : void
+}
+
+class Account {
+  - accountId : String
+  - accountType : TypeCompte
+  - balance : double
+  - transactions : List<Transaction>
+  + addTransaction(transaction : Transaction) : void
+}
+
+class Transaction {
+  - transactionId : String
+  - transactionType : TypeTransaction
+  - amount : double
+  - date : LocalDateTime
+  - description : String
+  - sourceAccount : Account
+  - destinationAccount : Account
+}
+
+class BankService {
+  - clients : Map<String, Client>
+  - managers : Map<String, Manager>
+  - accounts : Map<String, Account>
+  - transactions : List<Transaction>
+  + createClient(...)
+  + createManager(...)
+  + createAccount(...)
+  + deposit(account, amount, description)
+  + withdraw(account, amount, description)
+  + transfer(source, destination, amount, description)
+  + login(email, password) : boolean
+  + logout() : void
+}
+
+enum Role {
+  CLIENT
+  MANAGER
+}
+
+enum TypeCompte {
+  COURANT
+  EPARGNE
+  DEPOTATERME
+}
+
+enum TypeTransaction {
+  DEPOT
+  RETRAIT
+  VIREMENT
+}
+
+Personne <|-- Client
+Personne <|-- Manager
+
+Client "1" o-- "*" Account : owns >
+Account "1" o-- "*" Transaction : records >
+Transaction "*" --> "0..1" Account : destination
+Manager "1" o-- "*" Client : supervises >
+
+BankService ..> Client
+BankService ..> Manager
+BankService ..> Account
+BankService ..> Transaction
+BankService ..> Role
+BankService ..> TypeCompte
+BankService ..> TypeTransaction
+
+@enduml
